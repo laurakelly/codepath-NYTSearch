@@ -13,32 +13,10 @@
     tools:context=".activities.SearchActivity"
     tools:showIn="@layout/activity_search">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search"
-        android:id="@+id/btnSearch"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:hint="@string/search"
-        android:onClick="onArticleSearch"/>
-
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/gvResults"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/etQuery"
         android:numColumns="4"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etQuery"
-        android:layout_alignBottom="@+id/btnSearch"
-        android:layout_toLeftOf="@+id/btnSearch"
-        android:layout_alignLeft="@+id/gvResults"
-        android:layout_alignStart="@+id/gvResults"
-        android:hint="@string/enter_search_query"/>
 </RelativeLayout>
