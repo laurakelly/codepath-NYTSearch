@@ -2,6 +2,7 @@ package com.codepath.nytsearch.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -17,6 +18,7 @@ import android.widget.GridView;
 import com.codepath.nytsearch.Article;
 import com.codepath.nytsearch.ArticleArrayAdapter;
 import com.codepath.nytsearch.R;
+import com.codepath.nytsearch.fragments.FilterDialogFragment;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -31,6 +33,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
   GridView gvResults;
+  MenuItem actionFilter;
 
   ArrayList<Article> articles;
   ArticleArrayAdapter adapter;
@@ -83,6 +86,15 @@ public class SearchActivity extends AppCompatActivity {
       }
     });
 
+    actionFilter = menu.findItem(R.id.action_filter);
+    actionFilter.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+      @Override
+      public boolean onMenuItemClick(MenuItem menuItem) {
+        onArticleFilter();
+        return true;
+      }
+    });
+
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -131,5 +143,11 @@ public class SearchActivity extends AppCompatActivity {
         super.onFailure(statusCode, headers, throwable, errorResponse);
       }
     });
+  }
+
+  public void onArticleFilter() {
+    FragmentManager fm = getSupportFragmentManager();
+    FilterDialogFragment filterDialogFragment = FilterDialogFragment.newInstance();
+    filterDialogFragment.show(fm, "filter_fragment");
   }
 }
