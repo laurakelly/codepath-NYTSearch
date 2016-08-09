@@ -26,6 +26,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
         Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
 
         Article article = articles.get(position);
-        i.putExtra("article", article);
+        i.putExtra("article", Parcels.wrap(article));
         startActivity(i);
       }
     });
@@ -132,7 +133,6 @@ public class SearchActivity extends AppCompatActivity {
         try {
           articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
           adapter.addAll(Article.fromJSONArray(articleJsonResults));
-          Log.d("DEBUG", articles.toString());
         } catch (JSONException e) {
           e.printStackTrace();
         }

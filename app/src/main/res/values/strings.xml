@@ -6,4 +6,6 @@
     <string name="action_filter">Filter</string>
     <string name="arts">Arts</string>
     <string name="filter">Filter</string>
+    <string name="fashion">Fashion</string>
+    <string name="sports">Sports</string>
 </resources>

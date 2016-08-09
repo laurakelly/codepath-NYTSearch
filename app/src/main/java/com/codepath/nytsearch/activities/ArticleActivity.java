@@ -8,6 +8,8 @@ import android.webkit.WebViewClient;
 import com.codepath.nytsearch.Article;
 import com.codepath.nytsearch.R;
 
+import org.parceler.Parcels;
+
 public class ArticleActivity extends AppCompatActivity {
 
   @Override
@@ -15,7 +17,7 @@ public class ArticleActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_article);
 
-    Article article = (Article) getIntent().getSerializableExtra("article");
+    Article article = Parcels.unwrap(getIntent().getParcelableExtra("article"));
 
     WebView webView = (WebView) findViewById(R.id.wvArticle);
 
