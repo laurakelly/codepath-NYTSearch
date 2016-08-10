@@ -42,8 +42,11 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
 
   FilterSettings filterSettings;
 
-  public void onClickFiltered() {
-    Log.d("DEBUG", "test");
+  public void onClickFiltered(boolean arts, boolean fashion, boolean sports) {
+    // preserve selected filters
+    filterSettings.setArts(arts);
+    filterSettings.setFashion(fashion);
+    filterSettings.setSports(sports);
   }
 
   @Override

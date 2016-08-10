@@ -19,9 +19,21 @@ public class FilterSettings {
     return sports;
   }
 
-  private boolean arts;
-  private boolean fashion;
-  private boolean sports;
+  public boolean arts;
+  public boolean fashion;
+  public boolean sports;
+
+  public void setSports(boolean sports) {
+    this.sports = sports;
+  }
+
+  public void setArts(boolean arts) {
+    this.arts = arts;
+  }
+
+  public void setFashion(boolean fashion) {
+    this.fashion = fashion;
+  }
 
   public FilterSettings() {
     this.arts = false;

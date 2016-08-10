@@ -32,7 +32,7 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
   public boolean sports;
 
   public interface OnClickFilterSaveListener {
-    void onClickFiltered();
+    void onClickFiltered(boolean arts, boolean fashion, boolean sports);
   }
 
   public static FilterDialogFragment newInstance(FilterSettings filterSettings) {
@@ -54,7 +54,17 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
   @Override
   public void onClick(View view) {
     OnClickFilterSaveListener listener = (OnClickFilterSaveListener) this.getActivity();
-    listener.onClickFiltered();
+
+    // Update filter settings based on checkbox values
+    cbArts = (CheckBox) getView().findViewById(R.id.cbArts);
+    cbFashion = (CheckBox) getView().findViewById(R.id.cbFashion);
+    cbSports = (CheckBox) getView().findViewById(R.id.cbSports);
+
+    arts = cbArts.isChecked();
+    fashion = cbArts.isChecked();
+    sports = cbSports.isChecked();
+
+    listener.onClickFiltered(arts, fashion, sports);
     dismiss();
   }
 
