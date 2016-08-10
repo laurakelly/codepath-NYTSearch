@@ -17,6 +17,7 @@ import android.widget.GridView;
 
 import com.codepath.nytsearch.Article;
 import com.codepath.nytsearch.ArticleArrayAdapter;
+import com.codepath.nytsearch.FilterSettings;
 import com.codepath.nytsearch.R;
 import com.codepath.nytsearch.fragments.FilterDialogFragment;
 import com.loopj.android.http.AsyncHttpClient;
@@ -32,13 +33,18 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements FilterDialogFragment.OnClickFilterSaveListener {
   GridView gvResults;
   MenuItem actionFilter;
 
   ArrayList<Article> articles;
   ArticleArrayAdapter adapter;
 
+  FilterSettings filterSettings;
+
+  public void onClickFiltered() {
+    Log.d("DEBUG", "test");
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,7 @@ public class SearchActivity extends AppCompatActivity {
     articles = new ArrayList<>();
     adapter = new ArticleArrayAdapter(this, articles);
     gvResults.setAdapter(adapter);
+    filterSettings = new FilterSettings();
 
     gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
@@ -147,7 +154,7 @@ public class SearchActivity extends AppCompatActivity {
 
   public void onArticleFilter() {
     FragmentManager fm = getSupportFragmentManager();
-    FilterDialogFragment filterDialogFragment = FilterDialogFragment.newInstance();
+    FilterDialogFragment filterDialogFragment = FilterDialogFragment.newInstance(filterSettings);
     filterDialogFragment.show(fm, "filter_fragment");
   }
 }

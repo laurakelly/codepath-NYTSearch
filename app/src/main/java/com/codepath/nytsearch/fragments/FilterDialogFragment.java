@@ -11,35 +11,73 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 
+import com.codepath.nytsearch.FilterSettings;
 import com.codepath.nytsearch.R;
 
 /**
  * Created by laura_kelly on 8/8/16.
  */
-public class FilterDialogFragment extends DialogFragment{
+public class FilterDialogFragment extends DialogFragment implements View.OnClickListener {
   public FilterDialogFragment() {}
+  public Button btnFilter;
   public CheckBox cbArts;
+  public CheckBox cbFashion;
+  public CheckBox cbSports;
 
-  public static FilterDialogFragment newInstance() {
+  public boolean arts;
+  public boolean fashion;
+  public boolean sports;
+
+  public interface OnClickFilterSaveListener {
+    void onClickFiltered();
+  }
+
+  public static FilterDialogFragment newInstance(FilterSettings filterSettings) {
     FilterDialogFragment frag = new FilterDialogFragment();
     Bundle args = new Bundle();
+    args.putBoolean("arts", filterSettings.getArts());
+    args.putBoolean("sports", filterSettings.getSports());
+    args.putBoolean("fashion", filterSettings.getFashion());
     frag.setArguments(args);
     return frag;
   }
 
-  @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.filter_dialog, container);
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    final View view = inflater.inflate(R.layout.filter_dialog, container);
+    return view;
+  }
+
+  @Override
+  public void onClick(View view) {
+    OnClickFilterSaveListener listener = (OnClickFilterSaveListener) this.getActivity();
+    listener.onClickFiltered();
+    dismiss();
   }
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    cbArts = (CheckBox) view.findViewById(R.id.cbArts);
+    btnFilter = (Button) view.findViewById(R.id.btnFilter);
+    btnFilter.setOnClickListener(this);
+    applySettings(view);
+  }
 
+  public void applySettings(View v) {
+    arts = getArguments().getBoolean("arts");
+    fashion = getArguments().getBoolean("fashion");
+    sports = getArguments().getBoolean("sports");
+
+    cbArts = (CheckBox) getView().findViewById(R.id.cbArts);
+    cbFashion = (CheckBox) getView().findViewById(R.id.cbFashion);
+    cbSports = (CheckBox) getView().findViewById(R.id.cbSports);
+
+    cbArts.setChecked(arts);
+    cbFashion.setChecked(fashion);
+    cbSports.setChecked(sports);
   }
 
   @Override
