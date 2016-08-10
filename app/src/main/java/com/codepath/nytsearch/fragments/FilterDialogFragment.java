@@ -61,7 +61,7 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
     cbSports = (CheckBox) getView().findViewById(R.id.cbSports);
 
     arts = cbArts.isChecked();
-    fashion = cbArts.isChecked();
+    fashion = cbFashion.isChecked();
     sports = cbSports.isChecked();
 
     listener.onClickFiltered(arts, fashion, sports);

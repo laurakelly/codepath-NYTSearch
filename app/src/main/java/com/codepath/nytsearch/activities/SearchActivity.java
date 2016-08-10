@@ -7,6 +7,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,12 +42,17 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
   ArticleArrayAdapter adapter;
 
   FilterSettings filterSettings;
+  SearchView searchView;
 
   public void onClickFiltered(boolean arts, boolean fashion, boolean sports) {
     // preserve selected filters
     filterSettings.setArts(arts);
     filterSettings.setFashion(fashion);
     filterSettings.setSports(sports);
+
+    // Re-fetch articles
+    articles.clear();
+    onArticleSearch(searchView.getQuery().toString());
   }
 
   @Override
@@ -82,7 +88,7 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.menu_search, menu);
     MenuItem searchItem = menu.findItem(R.id.action_search);
-    final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+    searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override
@@ -133,6 +139,11 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
     params.put("api-key", "ca637ede91f44c13a9681a003f4e386f");
     params.put("page", 0);
     params.put("q", query);
+
+    ArrayList<String> newsDeskFilters = filterSettings.getNewsDeskFilters();
+    if (newsDeskFilters.size() > 0) {
+      params.put("fq", "news_desk:(\"" + TextUtils.join("\" \"", newsDeskFilters) + "\")");
+    }
 
     client.get(url, params, new JsonHttpResponseHandler() {
       @Override

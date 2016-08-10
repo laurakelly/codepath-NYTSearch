@@ -2,6 +2,8 @@ package com.codepath.nytsearch;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
+
 /**
  * Created by laura_kelly on 8/10/16.
  */
@@ -25,6 +27,17 @@ public class FilterSettings {
 
   public void setSports(boolean sports) {
     this.sports = sports;
+  }
+
+  public ArrayList<String> getNewsDeskFilters() {
+    ArrayList newsDeskFilters = new ArrayList<String>();
+
+    // TODO make constants
+    if (this.arts) newsDeskFilters.add("Arts");
+    if (this.fashion) newsDeskFilters.add("Fashion & Style");
+    if (this.sports) newsDeskFilters.add("Sports");
+
+    return newsDeskFilters;
   }
 
   public void setArts(boolean arts) {
