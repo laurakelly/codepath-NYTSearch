@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Spinner;
 
 import com.codepath.nytsearch.FilterSettings;
 import com.codepath.nytsearch.R;
@@ -23,16 +25,21 @@ import com.codepath.nytsearch.R;
 public class FilterDialogFragment extends DialogFragment implements View.OnClickListener {
   public FilterDialogFragment() {}
   public Button btnFilter;
+  public Spinner orderSpinner;
   public CheckBox cbArts;
   public CheckBox cbFashion;
   public CheckBox cbSports;
+  public Spinner spinnerOrder;
 
   public boolean arts;
   public boolean fashion;
   public boolean sports;
+  public String order;
+
+  public ArrayAdapter spinnerAdapter;
 
   public interface OnClickFilterSaveListener {
-    void onClickFiltered(boolean arts, boolean fashion, boolean sports, boolean hasChanged);
+    void onClickFiltered(boolean arts, boolean fashion, boolean sports, String order, boolean hasChanged);
   }
 
   public static FilterDialogFragment newInstance(FilterSettings filterSettings) {
@@ -41,6 +48,7 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
     args.putBoolean("arts", filterSettings.getArts());
     args.putBoolean("sports", filterSettings.getSports());
     args.putBoolean("fashion", filterSettings.getFashion());
+    args.putString("order", filterSettings.getOrder());
     frag.setArguments(args);
     return frag;
   }
@@ -61,17 +69,21 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
     cbArts = (CheckBox) getView().findViewById(R.id.cbArts);
     cbFashion = (CheckBox) getView().findViewById(R.id.cbFashion);
     cbSports = (CheckBox) getView().findViewById(R.id.cbSports);
+    spinnerOrder = (Spinner) getView().findViewById(R.id.order_spinner);
 
-    if (cbArts.isChecked() != arts || cbFashion.isChecked() != fashion || cbSports.isChecked() != sports) {
+    if (cbArts.isChecked() != arts ||
+            cbFashion.isChecked() != fashion ||
+            cbSports.isChecked() != sports ||
+            spinnerOrder.getSelectedItem().toString() != order) {
       hasChanged = true;
     }
 
     arts = cbArts.isChecked();
     fashion = cbFashion.isChecked();
     sports = cbSports.isChecked();
+    order = spinnerOrder.getSelectedItem().toString();
 
-
-    listener.onClickFiltered(arts, fashion, sports, hasChanged);
+    listener.onClickFiltered(arts, fashion, sports, order, hasChanged);
     dismiss();
   }
 
@@ -80,6 +92,13 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
     super.onViewCreated(view, savedInstanceState);
     btnFilter = (Button) view.findViewById(R.id.btnFilter);
     btnFilter.setOnClickListener(this);
+
+    orderSpinner = (Spinner) view.findViewById(R.id.order_spinner);
+    spinnerAdapter = ArrayAdapter.createFromResource(
+            this.getContext(), R.array.order_array, R.layout.support_simple_spinner_dropdown_item );
+    spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+    orderSpinner.setAdapter(spinnerAdapter);
+
     applySettings(view);
   }
 
@@ -87,14 +106,19 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
     arts = getArguments().getBoolean("arts");
     fashion = getArguments().getBoolean("fashion");
     sports = getArguments().getBoolean("sports");
+    order = getArguments().getString("order");
 
     cbArts = (CheckBox) getView().findViewById(R.id.cbArts);
     cbFashion = (CheckBox) getView().findViewById(R.id.cbFashion);
     cbSports = (CheckBox) getView().findViewById(R.id.cbSports);
+    spinnerOrder = (Spinner) getView().findViewById(R.id.order_spinner);
 
     cbArts.setChecked(arts);
     cbFashion.setChecked(fashion);
     cbSports.setChecked(sports);
+
+    int spinnerPosition = spinnerAdapter.getPosition(order);
+    orderSpinner.setSelection(spinnerPosition);
   }
 
   @Override

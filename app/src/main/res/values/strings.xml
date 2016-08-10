@@ -8,4 +8,8 @@
     <string name="filter">Filter</string>
     <string name="fashion">Fashion</string>
     <string name="sports">Sports</string>
+    <string-array name="order_array">
+        <item>Oldest</item>
+        <item>Newest</item>
+    </string-array>
 </resources>

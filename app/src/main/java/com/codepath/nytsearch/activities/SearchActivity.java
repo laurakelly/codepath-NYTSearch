@@ -44,11 +44,12 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
   FilterSettings filterSettings;
   SearchView searchView;
 
-  public void onClickFiltered(boolean arts, boolean fashion, boolean sports, boolean hasChanged) {
+  public void onClickFiltered(boolean arts, boolean fashion, boolean sports, String order, boolean hasChanged) {
     // preserve selected filters
     filterSettings.setArts(arts);
     filterSettings.setFashion(fashion);
     filterSettings.setSports(sports);
+    filterSettings.setOrder(order);
 
     if (hasChanged) {
       // Re-fetch articles
@@ -146,6 +147,8 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
     if (newsDeskFilters.size() > 0) {
       params.put("fq", "news_desk:(\"" + TextUtils.join("\" \"", newsDeskFilters) + "\")");
     }
+
+    params.put("sort", filterSettings.getOrder());
 
     client.get(url, params, new JsonHttpResponseHandler() {
       @Override

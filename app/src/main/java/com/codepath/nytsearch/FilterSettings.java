@@ -9,6 +9,19 @@ import java.util.ArrayList;
  */
 @Parcel
 public class FilterSettings {
+  public boolean arts;
+  public boolean fashion;
+  public boolean sports;
+  public String order;
+
+  public String getOrder() {
+    return order;
+  }
+
+  public void setOrder(String order) {
+    this.order = order;
+  }
+
   public boolean getArts() {
     return arts;
   }
@@ -21,23 +34,8 @@ public class FilterSettings {
     return sports;
   }
 
-  public boolean arts;
-  public boolean fashion;
-  public boolean sports;
-
   public void setSports(boolean sports) {
     this.sports = sports;
-  }
-
-  public ArrayList<String> getNewsDeskFilters() {
-    ArrayList newsDeskFilters = new ArrayList<String>();
-
-    // TODO make constants
-    if (this.arts) newsDeskFilters.add("Arts");
-    if (this.fashion) newsDeskFilters.add("Fashion & Style");
-    if (this.sports) newsDeskFilters.add("Sports");
-
-    return newsDeskFilters;
   }
 
   public void setArts(boolean arts) {
@@ -48,9 +46,22 @@ public class FilterSettings {
     this.fashion = fashion;
   }
 
+  public ArrayList<String> getNewsDeskFilters() {
+    ArrayList newsDeskFilters = new ArrayList<>();
+
+    // TODO make constants
+    if (this.arts) newsDeskFilters.add("Arts");
+    if (this.fashion) newsDeskFilters.add("Fashion & Style");
+    if (this.sports) newsDeskFilters.add("Sports");
+
+    return newsDeskFilters;
+  }
+
   public FilterSettings() {
     this.arts = false;
     this.fashion = false;
     this.sports = false;
+    // TODO make constant
+    this.order = "Newest";
   }
 }
