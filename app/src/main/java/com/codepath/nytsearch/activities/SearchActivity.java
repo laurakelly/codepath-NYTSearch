@@ -44,15 +44,17 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
   FilterSettings filterSettings;
   SearchView searchView;
 
-  public void onClickFiltered(boolean arts, boolean fashion, boolean sports) {
+  public void onClickFiltered(boolean arts, boolean fashion, boolean sports, boolean hasChanged) {
     // preserve selected filters
     filterSettings.setArts(arts);
     filterSettings.setFashion(fashion);
     filterSettings.setSports(sports);
 
-    // Re-fetch articles
-    articles.clear();
-    onArticleSearch(searchView.getQuery().toString());
+    if (hasChanged) {
+      // Re-fetch articles
+      articles.clear();
+      onArticleSearch(searchView.getQuery().toString());
+    }
   }
 
   @Override
