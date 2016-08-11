@@ -18,6 +18,7 @@ import android.widget.GridView;
 
 import com.codepath.nytsearch.Article;
 import com.codepath.nytsearch.ArticleArrayAdapter;
+import com.codepath.nytsearch.EndlessScrollListener;
 import com.codepath.nytsearch.FilterSettings;
 import com.codepath.nytsearch.R;
 import com.codepath.nytsearch.fragments.FilterDialogFragment;
@@ -44,6 +45,11 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
   FilterSettings filterSettings;
   SearchView searchView;
 
+  private AsyncHttpClient client;
+  private String url;
+  // TODO REMOVE API KEY
+  private String apiKey = "ca637ede91f44c13a9681a003f4e386f";
+
   public void onClickFiltered(boolean arts, boolean fashion, boolean sports, String order, boolean hasChanged) {
     // preserve selected filters
     filterSettings.setArts(arts);
@@ -51,11 +57,12 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
     filterSettings.setSports(sports);
     filterSettings.setOrder(order);
 
-    if (hasChanged) {
+    // TODO refactor to just filter, not re-fetch
+    /*if (hasChanged) {
       // Re-fetch articles
       articles.clear();
       onArticleSearch(searchView.getQuery().toString());
-    }
+    }*/
   }
 
   @Override
@@ -73,6 +80,8 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
     adapter = new ArticleArrayAdapter(this, articles);
     gvResults.setAdapter(adapter);
     filterSettings = new FilterSettings();
+    client = new AsyncHttpClient();
+    url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?";
 
     gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
@@ -82,6 +91,36 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
         Article article = articles.get(position);
         i.putExtra("article", Parcels.wrap(article));
         startActivity(i);
+      }
+    });
+
+    gvResults.setOnScrollListener(new EndlessScrollListener() {
+      @Override
+      public boolean onLoadMore(int page, int totalItemCount) {
+        customLoadMoreDataFromApi(page, searchView.getQuery().toString());
+        return true;
+      }
+    });
+  }
+
+  public void customLoadMoreDataFromApi(int offset, String query) {
+    RequestParams params = makeRequestParams(offset, query);
+    client.get(url, params, new JsonHttpResponseHandler() {
+      @Override
+      public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+        JSONArray articleJsonResults = null;
+
+        try {
+          articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+          adapter.addAll(Article.fromJSONArray(articleJsonResults));
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+        super.onFailure(statusCode, headers, responseString, throwable);
       }
     });
   }
@@ -133,14 +172,10 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
     return super.onOptionsItemSelected(item);
   }
 
-  public void onArticleSearch(String query) {
-    AsyncHttpClient client = new AsyncHttpClient();
-
-    // TODO REMOVE API KEY
-    String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?";
+  public RequestParams makeRequestParams(int page, String query) {
     RequestParams params = new RequestParams();
-    params.put("api-key", "ca637ede91f44c13a9681a003f4e386f");
-    params.put("page", 0);
+    params.put("api-key", apiKey);
+    params.put("page", String.valueOf(page));
     params.put("q", query);
 
     ArrayList<String> newsDeskFilters = filterSettings.getNewsDeskFilters();
@@ -150,6 +185,12 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
 
     params.put("sort", filterSettings.getOrder());
 
+    return params;
+  }
+
+  public void onArticleSearch(String query) {
+    RequestParams params = makeRequestParams(0, query);
+
     client.get(url, params, new JsonHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -158,6 +199,7 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
 
         try {
           articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+          adapter.clear();
           adapter.addAll(Article.fromJSONArray(articleJsonResults));
         } catch (JSONException e) {
           e.printStackTrace();
