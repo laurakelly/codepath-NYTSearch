@@ -50,19 +50,20 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
   // TODO REMOVE API KEY
   private String apiKey = "ca637ede91f44c13a9681a003f4e386f";
 
-  public void onClickFiltered(boolean arts, boolean fashion, boolean sports, String order, boolean hasChanged) {
+  public void onClickFiltered(boolean arts, boolean fashion, boolean sports, String order, int day, int month, int year, boolean hasChanged) {
     // preserve selected filters
     filterSettings.setArts(arts);
     filterSettings.setFashion(fashion);
     filterSettings.setSports(sports);
     filterSettings.setOrder(order);
+    filterSettings.setDay(day);
+    filterSettings.setMonth(month);
+    filterSettings.setYear(year);
 
-    // TODO refactor to just filter, not re-fetch
-    /*if (hasChanged) {
-      // Re-fetch articles
+    if (hasChanged && !searchView.getQuery().equals("")) {
       articles.clear();
       onArticleSearch(searchView.getQuery().toString());
-    }*/
+    }
   }
 
   @Override
@@ -172,11 +173,33 @@ public class SearchActivity extends AppCompatActivity implements FilterDialogFra
     return super.onOptionsItemSelected(item);
   }
 
+  public String formatDate(int day, int month, int year) {
+    String formattedDate = String.valueOf(year);
+
+    if (month < 10) {
+      formattedDate = formattedDate + "0" + String.valueOf(month);
+    } else {
+      formattedDate += String.valueOf(month);
+    }
+
+    if (day < 10) {
+      formattedDate = formattedDate + "0" + String.valueOf(day);
+    } else {
+      formattedDate += String.valueOf(day);
+    }
+
+    return formattedDate;
+  }
+
   public RequestParams makeRequestParams(int page, String query) {
     RequestParams params = new RequestParams();
     params.put("api-key", apiKey);
     params.put("page", String.valueOf(page));
     params.put("q", query);
+
+    if (filterSettings.getDay() != 0) {
+      params.put("begin_date", formatDate(filterSettings.getDay(), filterSettings.getMonth(), filterSettings.getYear()));
+    }
 
     ArrayList<String> newsDeskFilters = filterSettings.getNewsDeskFilters();
     if (newsDeskFilters.size() > 0) {

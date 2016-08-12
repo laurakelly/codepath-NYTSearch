@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     android:layout_gravity="center">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tvDate"
+        android:text="@string/date"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tvDatePickerDate"/>
+
     <Spinner
         android:id="@+id/order_spinner"
         android:layout_width="match_parent"

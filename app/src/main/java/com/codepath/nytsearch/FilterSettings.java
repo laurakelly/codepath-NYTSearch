@@ -14,6 +14,35 @@ public class FilterSettings {
   public boolean sports;
   public String order;
 
+  public int getDay() {
+    return day;
+  }
+
+  public int getMonth() {
+    return month;
+  }
+
+  public int getYear() {
+    return year;
+  }
+
+  public int day;
+  public int month;
+
+  public void setYear(int year) {
+    this.year = year;
+  }
+
+  public void setDay(int day) {
+    this.day = day;
+  }
+
+  public void setMonth(int month) {
+    this.month = month;
+  }
+
+  public int year;
+
   public String getOrder() {
     return order;
   }
